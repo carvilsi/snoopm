@@ -1,7 +1,7 @@
 # sNooPM
 snooping around code based on npm
 
-## State
+### Status
 Just works in my computer
 
 ### Install
