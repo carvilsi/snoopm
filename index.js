@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /**
  * sNooPM
  * snooping around code based on npm

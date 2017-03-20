@@ -1,18 +1,19 @@
 # sNooPM
-snooping around code based on npm
 
-### Status
-Just works in my computer
+Snooping around code based on npm
+
+This node script lists url and description for all npm dependencies.
+
+![Alt vmware](https://github.com/carvilsi/snoopm/raw/master/img.png)
 
 ### Install
-- clone this repository
-- `$ npm install`
-- `$ bin/snoopm.js [options]`
+
+ `$ npm install snoopm -g`
 
 
-### cli
+### Usage
 
-Usage: snoopm [options] [package dir or url repository]  
+Usage: snoopm [options] <package dir or url git repository (or url/raw package.json)>  
  Pro-tip: On OS X Terminal Command Key + double_click must open the link on default browser
 
   Options:
@@ -21,3 +22,7 @@ Usage: snoopm [options] [package dir or url repository]
     -V, --version  output the version number
     -v, --verbose  prints name, url and version
     -c, --color    suprime colors output
+
+**Example**
+
+`$ snoopm https://github.com/remy/nodemon`
