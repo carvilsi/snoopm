@@ -1,6 +1,6 @@
 {
   "name": "snoopm",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "simple npm develope dependecies analyzer",
   "main": "index.js",
   "scripts": {

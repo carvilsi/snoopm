@@ -1,6 +1,6 @@
 # sNooPM
 
-Snooping around code based on npm
+Snooping around code based on npm.
 
 This node script lists url and description for all npm dependencies.
 
@@ -14,7 +14,7 @@ This node script lists url and description for all npm dependencies.
 ### Usage
 
 Usage: snoopm [options] <package dir or url git repository (or url/raw package.json)>  
- Pro-tip: On OS X Terminal Command Key + double_click must open the link on default browser
+ ProTip: On OS X Terminal Command Key + double_click must open the link on default browser
 
   Options:
 

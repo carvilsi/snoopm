@@ -22,7 +22,6 @@ var urls = [],
 var readPackage = (packageData) => {
   try {
     Object.keys(packageData.dependencies).forEach((key)=>{
-      logger.debug(key);
       getUrlOfPackage(key);
     });
   } catch (e) {
@@ -33,8 +32,6 @@ var readPackage = (packageData) => {
 var getUrlOfPackage = (packageName) => {
   exec(npmView.concat(packageName), (error, stdout, stderr) => {
     if (!error && !stderr) {
-      logger.debug(JSON.parse(stdout).name);
-      logger.debug(JSON.parse(stdout).homepage);
       writeDown(JSON.parse(stdout));
     } else {
       logger.error('Error reading package: ' + packageName);
@@ -49,10 +46,7 @@ var parseCommandLine = () => {
 }
 
 var requesting = (url) => {
-  logger.debug(url);
-
   request(url, (error, response, body) => {
-    logger.debug(body);
     if (error) {
       logger.error('Error requesting package.json');
     } else {
@@ -90,15 +84,8 @@ var snoopm = (options) => {
 
     this.options = options;
     if (this.options.args.length === 0) {
-      logger.debug('no path or url provided, trying to get dependencies from local package.json');
-      var packageData = require('./package.json');
-      if (packageData) {
-        readPackage(packageData);
-      } else {
-        logger.warn('no path, no url or local package.json');
-      }
+        readPackage(require(process.cwd().concat('/package.json')));
     } else {
-      logger.debug(this.options.args[0]);
       if (path.basename(this.options.args[0]).trim() === 'package.json') {
         if (this.options.args[0].indexOf('.') === 0 || this.options.args[0].indexOf('/') === 0) {
           readPackage(require(this.options.args[0]));
@@ -108,7 +95,6 @@ var snoopm = (options) => {
          */
 
         if (this.options.args[0].indexOf('http') === 0) {
-          logger.debug('url');
           var url = this.options.args[0];
           if (url.indexOf('github.com') > 0) {
             url = url.replace('github.com','raw.githubusercontent.com');
@@ -124,15 +110,12 @@ var snoopm = (options) => {
       else if (this.options.args[0].indexOf('http') === 0) {
         var url = this.options.args[0];
         var urlArr = url.split('\/');
-        logger.debug(urlArr);
-        logger.debug(urlArr.length);
         if (url.indexOf('github.com') > 0 && urlArr.length === 5) {
           url = url.replace('github.com','raw.githubusercontent.com');
-          logger.debug(url);
           requesting(url.concat('/').concat('master').concat('/').concat('package.json'));
         }
       } else {
-        logger.warn('no valid path or no valid url provided');
+        throw new Error('no valid path or no valid url provided');
       }
     }
 
