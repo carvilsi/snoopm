@@ -21,11 +21,25 @@ var urls = [],
 
 var readPackage = (packageData) => {
   try {
-    Object.keys(packageData.dependencies).forEach((key)=>{
-      getUrlOfPackage(key);
-    });
+    if (this.options.dev) {
+      if (!packageData.devDependencies) {
+        console.log('=^^=|_');
+        // system.exit('This package has not devDependencies');
+        console.log('=^^=|_1111');
+        throw new Error('This package has not devDependencies');
+      }
+      Object.keys(packageData.devDependencies).forEach((key)=>{
+        getUrlOfPackage(key);
+      });
+    } else {
+      Object.keys(packageData.dependencies).forEach((key)=>{
+        getUrlOfPackage(key);
+      });
+    }
   } catch (e) {
-    return e;
+    logger.error(e.stack);
+
+    // return e;
   }
 }
 
@@ -81,7 +95,6 @@ var writeDown = (depData) => {
 
 var snoopm = (options) => {
   try {
-
     this.options = options;
     if (this.options.args.length === 0 ||
     this.options.args[0] == '.') {
