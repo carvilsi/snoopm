@@ -83,11 +83,14 @@ var snoopm = (options) => {
   try {
 
     this.options = options;
-    if (this.options.args.length === 0) {
+    if (this.options.args.length === 0 ||
+    this.options.args[0] == '.') {
         readPackage(require(process.cwd().concat('/package.json')));
     } else {
       if (path.basename(this.options.args[0]).trim() === 'package.json') {
-        if (this.options.args[0].indexOf('.') === 0 || this.options.args[0].indexOf('/') === 0) {
+        if (this.options.args[0].indexOf('.') === 0 ||
+            this.options.args[0].indexOf('/') === 0
+          ) {
           readPackage(require(this.options.args[0]));
         }
         /**
