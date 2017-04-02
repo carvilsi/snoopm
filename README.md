@@ -19,15 +19,11 @@ ProTip: On OS X Terminal Command Key + double_click must open the link on defaul
 
 Options:
 
-  -h, --help     output usage information
-
-  -V, --version  output the version number
-
-  -v, --verbose  prints name, url and version
-
-  -c, --color    suprime colors aoutput
-
-  -d, --dev      snooping devDependencies
+    -h, --help     output usage information
+    -V, --version  output the version number
+    -v, --verbose  prints name, url and version
+    -c, --color    suprime colors aoutput
+    -d, --dev      snooping devDependencies
 
 
 **Example**
