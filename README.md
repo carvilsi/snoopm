@@ -13,15 +13,18 @@ This node script lists url and description for all npm dependencies.
 
 ### Usage
 
-Usage: snoopm [options] <package dir or url git repository (or url/raw package.json)>  
- ProTip: On OS X Terminal Command Key + double_click must open the link on default browser
+Usage: snoopm [options] [package dir or url repository]  
 
-  Options:
+ProTip: On OS X Terminal Command Key + double_click must open the link on default browser
 
-    -h, --help     output usage information
-    -V, --version  output the version number
-    -v, --verbose  prints name, url and version
-    -c, --color    suprime colors output
+Options:
+
+  -h, --help     output usage information
+  -V, --version  output the version number
+  -v, --verbose  prints name, url and version
+  -c, --color    suprime colors aoutput
+  -d, --dev      snooping devDependencies
+
 
 **Example**
 

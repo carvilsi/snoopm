@@ -12,51 +12,87 @@ const logger = require('./logger');
 const path = require('path');
 const request = require('request');
 const colors = require('colors');
+const Table = require('cli-table');
 
 const npmView = 'npm view --json=true ';
 var urls = [],
     logOutputFormat = 'default',
-    options = {};
+    options = {},
+    table = new Table(),
+    urlsPromises = [];
 
 
 var readPackage = (packageData) => {
+
   try {
+    parseCommandLine();
     if (this.options.dev) {
       if (!packageData.devDependencies) {
-        console.log('=^^=|_');
-        // system.exit('This package has not devDependencies');
-        console.log('=^^=|_1111');
         throw new Error('This package has not devDependencies');
       }
       Object.keys(packageData.devDependencies).forEach((key)=>{
-        getUrlOfPackage(key);
+        urlsPromises.push(getUrlOfPackage(key));
       });
+
     } else {
       Object.keys(packageData.dependencies).forEach((key)=>{
-        getUrlOfPackage(key);
+        urlsPromises.push(getUrlOfPackage(key));
       });
     }
+    Promise.all(urlsPromises)
+    .then((res) => {
+      if (typeof this.options.lines == "undefined") {
+        console.log(table.toString());
+      }
+    });
   } catch (e) {
     logger.error(e.stack);
-
-    // return e;
   }
+
 }
 
 var getUrlOfPackage = (packageName) => {
-  exec(npmView.concat(packageName), (error, stdout, stderr) => {
-    if (!error && !stderr) {
-      writeDown(JSON.parse(stdout));
-    } else {
-      logger.error('Error reading package: ' + packageName);
-    }
+  return new Promise((resolve, reject) => {
+    exec(npmView.concat(packageName), (error, stdout, stderr) => {
+      if (!error && !stderr) {
+        writeDown(JSON.parse(stdout));
+        resolve(JSON.parse(stdout));
+      } else {
+        logger.error('Error reading package: ' + packageName);
+        reject(error);
+      }
+    });
   });
 }
 
 var parseCommandLine = () => {
-  if (this.options.verbose && this.options.color) this.logOutputFormat = 'verbose-noColor';
-  if (this.options.verbose && !this.options.color) this.logOutputFormat = 'verbose';
-  if (!this.options.verbose && this.options.color) this.logOutputFormat = 'default-noColor';
+  if (this.options.verbose && this.options.color) {
+    this.logOutputFormat = 'verbose-noColor';
+    table = new Table({
+      head:['name','Ver.','URL','Description']
+    });
+  } else
+  if (this.options.verbose && !this.options.color) {
+    this.logOutputFormat = 'verbose';
+    table = new Table();
+  } else
+  if (!this.options.verbose && this.options.color) {
+    this.logOutputFormat = 'default-noColor'
+    table = new Table({
+      head:['name','URL','Description']
+    });
+  } else
+  if (this.options.verbose && this.options.dev) {
+    table = new Table();
+  } else
+  if (this.options.verbose && this.options.dev && this.options.color) {
+    table = new Table({
+      head:['name','Ver.','URL','Description']
+    });
+  }
+  else {
+    table = new Table();
+  }
 }
 
 var requesting = (url) => {
@@ -74,26 +110,41 @@ var requesting = (url) => {
 }
 
 var writeDown = (depData) => {
-
-  parseCommandLine();
-
   switch (this.logOutputFormat) {
     case 'verbose':
-      console.log(colors.gray(depData.name).concat(' ; ').concat(depData['dist-tags'].latest).concat(' ; ').concat(colors.underline(depData.homepage).concat(' ; ').concat(colors.cyan(depData.description))));
+      if (this.options.lines) {
+        console.log(colors.gray(depData.name).concat(' ; ').concat(depData['dist-tags'].latest).concat(' ; ').concat(typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':colors.underline(depData.homepage).concat(' ; ').concat(colors.cyan(depData.description))));
+      } else {
+        table.push([colors.gray(depData.name),depData['dist-tags'].latest,typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':colors.underline(typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':depData.homepage),colors.cyan(depData.description.length>70?depData.description.substring(0,70).concat('...'):depData.description)]);
+      }
       break;
     case 'default-noColor':
-      console.log(depData.name.concat(' ; ').concat(depData.homepage).concat(' ; ').concat(depData.description));
+      if (this.options.lines) {
+        console.log(depData.name.concat(' ; ').concat(typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':depData.homepage).concat(' ; ').concat(depData.description));
+      } else {
+        table.push([depData.name,typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':depData.homepage,depData.description.length>70?depData.description.substring(0,70).concat('...'):depData.description]);
+      }
       break;
     case 'verbose-noColor':
-      console.log(depData.name.concat(' ; ').concat(depData['dist-tags'].latest).concat(' ; ').concat(depData.homepage).concat(' ; ').concat(depData.description));
+      if (this.options.lines) {
+        console.log(depData.name.concat(' ; ').concat(depData['dist-tags'].latest).concat(' ; ').concat(depData.homepage).concat(' ; ').concat(depData.description));
+      } else {
+        table.push([depData.name.toString(),depData['dist-tags'].latest.toString(),typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':depData.homepage,depData.description.length>70?depData.description.substring(0,70).concat('...'):depData.description]);
+      }
       break;
     default:
-      console.log(colors.gray(depData.name).concat(' ; ').concat(colors.underline(depData.homepage).concat(' ; ').concat(colors.cyan(depData.description))));
+      if (this.options.lines) {
+        console.log(colors.gray(depData.name).concat(' ; ').concat(colors.underline(depData.homepage).concat(' ; ').concat(colors.cyan(depData.description))));
+      } else {
+        table.push([colors.gray(depData.name),colors.underline(depData.homepage),colors.cyan(depData.description.length>70?depData.description.substring(0,70).concat('...'):depData.description)]);
+      }
       break;
   }
 }
 
 var snoopm = (options) => {
+
+
   try {
     this.options = options;
     if (this.options.args.length === 0 ||
@@ -134,7 +185,6 @@ var snoopm = (options) => {
         throw new Error('no valid path or no valid url provided');
       }
     }
-
     return snoopm;
 
   } catch (e) {
