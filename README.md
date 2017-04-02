@@ -22,7 +22,7 @@ Options:
     -h, --help     output usage information
     -V, --version  output the version number
     -v, --verbose  prints name, url and version
-    -c, --color    suprime colors aoutput
+    -c, --color    no colors for output
     -d, --dev      snooping devDependencies
 
 
