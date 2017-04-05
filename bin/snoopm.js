@@ -12,7 +12,7 @@ options
 .option('-v, --verbose','prints name, url and version')
 .option('-c, --color','suprime colors aoutput')
 .option('-d, --dev','snooping devDependencies')
-.option('-l, --lines','lines output')
+.option('-l, --lines','outputs lines instead table')
 .parse(process.argv);
 
 snoopm(options);

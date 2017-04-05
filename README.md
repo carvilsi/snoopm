@@ -24,6 +24,7 @@ Options:
     -v, --verbose  prints name, url and version
     -c, --color    no colors for output
     -d, --dev      snooping devDependencies
+    -l, --lines    outputs lines instead table
 
 
 **Example**
