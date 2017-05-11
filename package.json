@@ -1,6 +1,6 @@
 {
   "name": "snoopm",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "simple npm develope dependecies analyzer",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
   "author": "carvilsi",
   "license": "MIT",
   "dependencies": {
+    "cli-spinner": "^0.2.6",
     "cli-table": "^0.3.1",
     "colors": "^1.1.2",
     "commander": "^2.9.0",

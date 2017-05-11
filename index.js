@@ -13,13 +13,16 @@ const path = require('path');
 const request = require('request');
 const colors = require('colors');
 const Table = require('cli-table');
+const Spinner = require('cli-spinner').Spinner;
 
-const npmView = 'npm view --json=true ';
+// const npmView = 'npm view --json=true ';
+const npmView = 'npm view --json=true --fetch-retry-maxtimeout=45000 ';
 var urls = [],
     logOutputFormat = 'default',
     options = {},
     table = new Table(),
-    urlsPromises = [];
+    urlsPromises = [],
+    spinner;
 
 
 var readPackage = (packageData) => {
@@ -28,7 +31,8 @@ var readPackage = (packageData) => {
     parseCommandLine();
     if (this.options.dev) {
       if (!packageData.devDependencies) {
-        throw new Error('This package has not devDependencies');
+        logger.warn('This package has not devDependencies');
+        process.exit();
       }
       Object.keys(packageData.devDependencies).forEach((key)=>{
         urlsPromises.push(getUrlOfPackage(key));
@@ -42,7 +46,10 @@ var readPackage = (packageData) => {
     Promise.all(urlsPromises)
     .then((res) => {
       if (typeof this.options.lines == "undefined") {
+        spinner.stop(true);
         console.log(table.toString());
+      } else {
+        spinner.stop(true);
       }
     });
   } catch (e) {
@@ -57,7 +64,8 @@ var getUrlOfPackage = (packageName) => {
       if (!error && !stderr) {
         writeDown(JSON.parse(stdout));
         resolve(JSON.parse(stdout));
-      } else {
+      } else
+      if (error) {
         logger.error('Error reading package: ' + packageName);
         reject(error);
       }
@@ -77,7 +85,7 @@ var parseCommandLine = () => {
     table = new Table();
   } else
   if (!this.options.verbose && this.options.color) {
-    this.logOutputFormat = 'default-noColor'
+    this.logOutputFormat = 'default-noColor';
     table = new Table({
       head:['name','URL','Description']
     });
@@ -144,9 +152,13 @@ var writeDown = (depData) => {
 
 var snoopm = (options) => {
 
-
   try {
+    spinner = new Spinner('snooping.. %s');
+    spinner.setSpinnerString('==^^^^==||__');
     this.options = options;
+    if (typeof this.options.lines == "undefined") {
+      spinner.start();
+    }
     if (this.options.args.length === 0 ||
     this.options.args[0] == '.') {
         readPackage(require(process.cwd().concat('/package.json')));

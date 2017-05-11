@@ -1,10 +1,10 @@
 const winston = require('winston');
 
 var transport = new (winston.transports.Console)({
-  level: 'error', colorize: true });
+  level: 'warn', colorize: true });
 var logger = new (winston.Logger)({
   transports: [transport]});
 
-transport.level = 'error';
+transport.level = 'warn';
 
 module.exports = logger;
