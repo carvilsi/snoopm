@@ -2,6 +2,8 @@
 
 Snooping around code based on npm.
 
+[![NPM](https://nodei.co/npm/snoopm.png?compact=true)](https://nodei.co/npm/<package>/)
+
 This node script lists url and description for all npm dependencies.
 
 ![Alt vmware](https://github.com/carvilsi/snoopm/raw/master/img.png)
