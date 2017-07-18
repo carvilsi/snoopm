@@ -39,6 +39,10 @@ var readPackage = (packageData) => {
       });
 
     } else {
+      if (!packageData.dependencies) {
+        logger.warn('This package has not dependencies. Try with -d');
+        process.exit();
+      }
       Object.keys(packageData.dependencies).forEach((key)=>{
         urlsPromises.push(getUrlOfPackage(key));
       });
@@ -54,6 +58,7 @@ var readPackage = (packageData) => {
     });
   } catch (e) {
     logger.error(e.stack);
+    process.exit();
   }
 
 }
