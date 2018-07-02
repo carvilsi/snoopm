@@ -1,4 +1,4 @@
-# sNooPM
+<p align="left"><img src="logo.png" alt="snoopm" height="50px"></p>
 
 Snooping around code based on npm.
 
