@@ -6,16 +6,15 @@
 
 'use strict';
 
-const fs = require('fs');
-const exec = require('child_process').exec;
-const logger = require('./logger');
-const path = require('path');
+const fs      = require('fs');
+const exec    = require('child_process').exec;
+const path    = require('path');
 const request = require('request');
-const colors = require('colors');
-const Table = require('cli-table');
+const colors  = require('colors');
+const Table   = require('cli-table');
 const Spinner = require('cli-spinner').Spinner;
+const logger  = require('logplease').create('sNooPM');
 
-// const npmView = 'npm view --json=true ';
 const npmView = 'npm view --json=true --fetch-retry-maxtimeout=45000 ';
 var urls = [],
     logOutputFormat = 'default',
@@ -32,7 +31,7 @@ var readPackage = (packageData) => {
     if (this.options.dev) {
       if (!packageData.devDependencies) {
         logger.warn('This package has not devDependencies');
-        process.exit();
+        process.exit(42);
       }
       Object.keys(packageData.devDependencies).forEach((key)=>{
         urlsPromises.push(getUrlOfPackage(key));
@@ -41,7 +40,7 @@ var readPackage = (packageData) => {
     } else {
       if (!packageData.dependencies) {
         logger.warn('This package has not dependencies. Try with -d');
-        process.exit();
+        process.exit(42);
       }
       Object.keys(packageData.dependencies).forEach((key)=>{
         urlsPromises.push(getUrlOfPackage(key));
@@ -58,7 +57,7 @@ var readPackage = (packageData) => {
     });
   } catch (e) {
     logger.error(e.stack);
-    process.exit();
+    process.exit(42);
   }
 
 }
@@ -117,6 +116,7 @@ var requesting = (url) => {
         readPackage(JSON.parse(body));
       } catch (e) {
         logger.error('Invalid package.json provided by url');
+        process.exit(42);
       }
     }
   });
@@ -205,8 +205,9 @@ var snoopm = (options) => {
     return snoopm;
 
   } catch (e) {
-    logger.error('Error 41');
+    logger.error('Error 42');
     logger.error(e);
+    process.exit(42);
   }
 }
 

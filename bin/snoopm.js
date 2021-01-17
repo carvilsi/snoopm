@@ -3,7 +3,7 @@
 'use strict';
 
 const options = require('commander');
-const snoopm = require('./../index.js');
+const snoopm  = require('./../index.js');
 const version = require('./../package.json').version;
 
 options
