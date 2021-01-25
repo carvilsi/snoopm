@@ -13,6 +13,7 @@ const request = require('request');
 const colors  = require('colors');
 const Table   = require('cli-table');
 const Spinner = require('cli-spinner').Spinner;
+const semver  = require('semver')
 const logger  = require('logplease').create('sNooPM');
 
 const npmView = 'npm view --json=true --fetch-retry-maxtimeout=45000 ';
@@ -21,7 +22,8 @@ var urls = [],
     options = {},
     table = new Table(),
     urlsPromises = [],
-    spinner;
+    spinner,
+    dep = {};
 
 
 var readPackage = (packageData) => {
@@ -33,6 +35,7 @@ var readPackage = (packageData) => {
         logger.warn('This package has not devDependencies');
         process.exit(42);
       }
+      dep = packageData.devDependencies;
       Object.keys(packageData.devDependencies).forEach((key)=>{
         urlsPromises.push(getUrlOfPackage(key));
       });
@@ -42,6 +45,7 @@ var readPackage = (packageData) => {
         logger.warn('This package has not dependencies. Try with -d');
         process.exit(42);
       }
+      dep = packageData.dependencies;
       Object.keys(packageData.dependencies).forEach((key)=>{
         urlsPromises.push(getUrlOfPackage(key));
       });
@@ -125,10 +129,14 @@ var requesting = (url) => {
 var writeDown = (depData) => {
   switch (this.logOutputFormat) {
     case 'verbose':
+      var currentVersion = dep[depData.name];
+      if (/^\^.*/m.test(currentVersion)) {
+        currentVersion = currentVersion.substring(1)
+      }
       if (this.options.lines) {
-        console.log(colors.gray(depData.name).concat(' ; ').concat(depData['dist-tags'].latest).concat(' ; ').concat(typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':colors.underline(depData.homepage).concat(' ; ').concat(colors.cyan(depData.description))));
+        console.log(colors.gray(depData.name).concat(' ; ').concat(semver.lt(currentVersion,depData['dist-tags'].latest) ? colors.red(`${currentVersion} --> ${depData['dist-tags'].latest}`) : depData['dist-tags'].latest).concat(' ; ').concat(typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':colors.underline(depData.homepage).concat(' ; ').concat(colors.cyan(depData.description))));
       } else {
-        table.push([colors.gray(depData.name),depData['dist-tags'].latest,typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':colors.underline(typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':depData.homepage),colors.cyan(depData.description.length>70?depData.description.substring(0,70).concat('...'):depData.description)]);
+        table.push([colors.gray(depData.name),semver.lt(currentVersion,depData['dist-tags'].latest) ? colors.red(`${currentVersion} --> ${depData['dist-tags'].latest}`) : depData['dist-tags'].latest,typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':colors.underline(typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':depData.homepage),colors.cyan(depData.description.length>70?depData.description.substring(0,70).concat('...'):depData.description)]);
       }
       break;
     case 'default-noColor':
