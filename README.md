@@ -22,7 +22,7 @@ ProTip: On OS X Terminal Command Key + double_click must open the link on defaul
 Options:
 
     -h, --help     output usage information
-    -V, --version  output the version number
+    -V, --version  output the version number, shows if there is newer version
     -v, --verbose  prints name, url and version
     -c, --color    no colors for output
     -d, --dev      snooping devDependencies
