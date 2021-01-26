@@ -130,7 +130,7 @@ var writeDown = (depData) => {
   switch (this.logOutputFormat) {
     case 'verbose':
       var currentVersion = dep[depData.name];
-      if (/^\^.*/m.test(currentVersion)) {
+      if (/^[\^\~].*/m.test(currentVersion)) {
         currentVersion = currentVersion.substring(1)
       }
       if (this.options.lines) {
