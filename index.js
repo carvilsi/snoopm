@@ -16,7 +16,7 @@ const Spinner = require('cli-spinner').Spinner;
 const semver  = require('semver')
 const logger  = require('logplease').create('sNooPM');
 
-const npmView = 'npm view --json=true --fetch-retry-maxtimeout=45000 ';
+const npmView = 'npm view --json=true --fetch-retry-maxtimeout=1000 ';
 var urls = [],
     logOutputFormat = 'default',
     options = {},
