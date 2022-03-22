@@ -17,6 +17,7 @@
   "author": "carvilsi",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.26.1",
     "cli-spinner": "^0.2.10",
     "cli-table": "^0.3.4",
     "colors": "^1.4.0",

@@ -9,7 +9,7 @@
 const fs      = require('fs');
 const exec    = require('child_process').exec;
 const path    = require('path');
-const request = require('request');
+const axios   = require('axios');
 const colors  = require('colors');
 const Table   = require('cli-table');
 const Spinner = require('cli-spinner').Spinner;
@@ -112,17 +112,15 @@ var parseCommandLine = () => {
 }
 
 var requesting = (url) => {
-  request(url, (error, response, body) => {
-    if (error) {
-      logger.error('Error requesting package.json');
-    } else {
-      try {
-        readPackage(JSON.parse(body));
-      } catch (e) {
-        logger.error('Invalid package.json provided by url');
-        process.exit(42);
-      }
+  axios.get(url).then((response)=>{
+    try {
+      readPackage(response.data);
+    } catch (error) {
+      logger.error('Invalid package.json provided by url');
+      process.exit(42);
     }
+  }).catch((error)=>{
+    logger.error('Error requesting package.json');
   });
 }
 
