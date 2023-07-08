@@ -1,7 +1,7 @@
 {
   "name": "snoopm",
-  "version": "1.1.9",
-  "description": "simple npm develope dependecies analyzer",
+  "version": "1.1.10",
+  "description": "simple cli npm develope dependecies analyzer",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,7 +23,6 @@
     "colors": "^1.4.0",
     "commander": "^2.9.0",
     "logplease": "^1.2.15",
-    "request": "^2.88.2",
-    "semver": "^7.3.4"
+    "semver": "^7.5.4"
   }
 }
