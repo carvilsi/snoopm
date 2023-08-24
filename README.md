@@ -1,10 +1,13 @@
-<p align="left"><img src="logo.png" alt="snoopm" height="50px"></p>
+<p align="center">
+    <img src="logo.png" alt="snoopm" height="50px">
+</p>
 
-Snooping around code based on npm.
+<p align="center">
+    :dog: Snooping around Node.js code dependencies 
+</p>
 
-[![NPM](https://nodei.co/npm/snoopm.png?compact=true)](https://nodei.co/npm/<package>/)
-
-This node script lists url and description for all npm dependencies.
+A cli to get at a glance what are the fundations of other Node.js code. Gives in a list the url and description for the dependencies.
+Also it's possible to use it for your own code, e.g. to quick remember which dependency used in a project.
 
 ![Alt vmware](https://github.com/carvilsi/snoopm/raw/master/img.png)
 
@@ -23,15 +26,16 @@ Options:
 
     -h, --help     output usage information
     -V, --version  output the version number, shows if there is newer version
-    -v, --verbose  prints name, url and version
+    -v, --verbose  prints name, url and version (shows if there is newer version)
     -c, --color    no colors for output
     -d, --dev      snooping devDependencies
     -l, --lines    outputs lines instead table
 
+### Examples
 
-**Example**
+- Snooping the great **nodemon** dependencies **repo URL** 
 
-`$ snoopm https://github.com/remy/nodemon`
+`$snoopm https://github.com/remy/nodemon`
 
 ### Collaborators
 sNooPM **logo** made by [@psikoz](https://github.com/psikoz)
