@@ -6,8 +6,14 @@
     :dog: Snooping around Node.js code dependencies 
 </p>
 
-A cli to get at a glance what are the fundations of other Node.js code. Gives in a list the url and description for the dependencies.
+<p align="left">
+A cli to get at a glance what are the fundations of other Node.js code.
+</p>
+
+<p align="left">
+Gives in a list the url and description for the dependencies.
 Also it's possible to use it for your own code, e.g. to quick remember which dependency used in a project.
+</p>
 
 ![Alt vmware](https://github.com/carvilsi/snoopm/raw/master/img.png)
 
@@ -33,7 +39,7 @@ Options:
 
 ### Examples
 
-- Snooping the great **nodemon** dependencies **repo URL** 
+- Snooping the great **nodemon** dependencies by **repo URL** 
 
 `$snoopm https://github.com/remy/nodemon`
 
