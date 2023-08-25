@@ -7,7 +7,7 @@
     "test": "./node_modules/mocha/bin/mocha.js --config=tests/.mocha_opts.yaml tests/"
   },
   "engines": {
-    "node": ">=6.2.2"
+    "node": ">=18.x"
   },
   "repository": {
     "type": "git",
