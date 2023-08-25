@@ -59,7 +59,7 @@ describe('SnOOpm command line', async ()=>{
     assertDependencies(stdout, snoopmDevDependencies);
   });
 
-it.only('should retieve default table output verbose for snooping on local package.json argument "-v"', async () =>{
+  it('should retieve default table output verbose for snooping on local package.json argument "-v"', async () =>{
     var {stdout} = await execa('./bin/snoopm.js', ['-v']);
     console.log(stdout);
     assert.notEqual(stdout.indexOf(pckg.dependencies[snoopmDependencies[0]].substring(1)), -1, 'should find the dependency version');
