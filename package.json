@@ -4,7 +4,7 @@
   "description": "A cli to get at a glance what are the fundations of other Node.js code.",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha.js --config=tests/.mocha_opts.yaml tests/"
+    "test": "npm install snoopm; ./node_modules/mocha/bin/mocha.js --config=tests/.mocha_opts.yaml tests/"
   },
   "engines": {
     "node": ">=18.x"
@@ -23,7 +23,8 @@
     "colors": "^1.4.0",
     "commander": "^2.9.0",
     "logplease": "^1.2.15",
-    "semver": "^7.5.4"
+    "semver": "^7.5.4",
+    "snoopm": "^1.1.10"
   },
   "devDependencies": {
     "chai": "^4.3.8",

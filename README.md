@@ -43,7 +43,7 @@ Options:
 
 - Snooping the great **nodemon** dependencies by **repo URL** 
 
-`$snoopm https://github.com/remy/nodemon`
+`$ snoopm https://github.com/remy/nodemon`
 
 ### Collaborators
 sNooPM **logo** made by [@psikoz](https://github.com/psikoz)
