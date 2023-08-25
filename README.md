@@ -10,6 +10,10 @@
 A cli to get at a glance what are the fundations of other Node.js code.
 </p>
 
+ <p align="center">
+     ![tests](https://github.com/carvilsi/snoopm/actions/workflows/tests.yml/badge.svg)
+ </p>
+
 <p align="left">
 Gives in a list the url and description for the dependencies.
 Also it's possible to use it for your own code, e.g. to quick remember which dependency used in a project.
