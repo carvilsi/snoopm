@@ -1,8 +1,7 @@
 /**
- * sNooPM
+ * SnOOpm 
  * snooping around code based on npm
  */
-
 
 'use strict';
 
@@ -13,8 +12,8 @@ const axios   = require('axios');
 const colors  = require('colors');
 const Table   = require('cli-table');
 const Spinner = require('cli-spinner').Spinner;
-const semver  = require('semver')
-const logger  = require('logplease').create('sNooPM');
+const semver  = require('semver');
+const logger  = require('logplease').create('SnOOpm');
 
 const npmView = 'npm view --json=true '; 
 var urls = [],
@@ -24,10 +23,9 @@ var urls = [],
     urlsPromises = [],
     spinner,
     dep = {};
-
+const debug = false;
 
 var readPackage = (packageData) => {
-
   try {
     parseCommandLine();
     if (this.options.dev) {
@@ -50,9 +48,10 @@ var readPackage = (packageData) => {
         urlsPromises.push(getUrlOfPackage(key));
       });
     }
+
     Promise.all(urlsPromises)
     .then((res) => {
-      if (typeof this.options.lines == "undefined") {
+      if (typeof this.options.lines == 'undefined') {
         spinner.stop(true);
         console.log(table.toString());
       } else {
@@ -63,7 +62,6 @@ var readPackage = (packageData) => {
     logger.error(e.stack);
     process.exit(42);
   }
-
 }
 
 var getUrlOfPackage = (packageName) => {
@@ -82,6 +80,7 @@ var getUrlOfPackage = (packageName) => {
 }
 
 var parseCommandLine = () => {
+
   if (this.options.verbose && this.options.color) {
     this.logOutputFormat = 'verbose-noColor';
     table = new Table({
@@ -109,6 +108,7 @@ var parseCommandLine = () => {
   else {
     table = new Table();
   }
+
 }
 
 var requesting = (url) => {
@@ -162,28 +162,34 @@ var writeDown = (depData) => {
 }
 
 var snoopm = (options) => {
-
+  
   try {
-    spinner = new Spinner('snooping.. %s');
+  
+    spinner = new Spinner('SnOOping.. %s');
     spinner.setSpinnerString('==^^^^==||__');
     this.options = options;
-    if (typeof this.options.lines == "undefined") {
+
+    if (debug) console.log(`🐞 options ${JSON.stringify(this.options)}`);
+
+    // we want a clean output for lines option without the spinner 
+    if (typeof this.options.lines === 'undefined') {
       spinner.start();
     }
-    if (this.options.args.length === 0 ||
-    this.options.args[0] == '.') {
+
+    // we want to read the local package json file
+    if (!this.options.args.length || this.options.args[0] === '.') {
         readPackage(require(process.cwd().concat('/package.json')));
     } else {
-      if (path.basename(this.options.args[0]).trim() === 'package.json') {
+      if (debug) console.log(`🐞 the command:  ${this.options.args[0]}`);
+      if (path.basename(this.options.args[0]).trim() === 'package.json') 
+      // || this.options.args[0].indexOf('node_modules') !== 0) 
+      {
         if (this.options.args[0].indexOf('.') === 0 ||
-            this.options.args[0].indexOf('/') === 0
-          ) {
+            this.options.args[0].indexOf('/') === 0 ) {
+              if (debug) console.log('🐞 HEEEEEEERE');
           readPackage(require(this.options.args[0]));
         }
-        /**
-         * url to json raw provided
-         */
-
+        // url to json raw provided
         if (this.options.args[0].indexOf('http') === 0) {
           var url = this.options.args[0];
           if (url.indexOf('github.com') > 0) {
@@ -193,10 +199,7 @@ var snoopm = (options) => {
           requesting(url);
         }
       }
-      /**
-       * trying yo read package.json from git hub repository and master branch
-       */
-
+      // trying yo read package.json from git hub repository and master branch
       else if (this.options.args[0].indexOf('http') === 0) {
         var url = this.options.args[0];
         var urlArr = url.split('\/');
@@ -208,6 +211,7 @@ var snoopm = (options) => {
         throw new Error('no valid path or no valid url provided');
       }
     }
+
     return snoopm;
 
   } catch (e) {
