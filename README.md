@@ -6,13 +6,11 @@
     :dog: Snooping around Node.js code dependencies 
 </p>
 
+![tests](https://github.com/carvilsi/snoopm/actions/workflows/tests.yml/badge.svg)
+
 <p align="left">
 A cli to get at a glance what are the fundations of other Node.js code.
 </p>
-
- <p align="center">
-     ![tests](https://github.com/carvilsi/snoopm/actions/workflows/tests.yml/badge.svg)
- </p>
 
 <p align="left">
 Gives in a list the url and description for the dependencies.
