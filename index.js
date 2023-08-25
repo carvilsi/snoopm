@@ -23,7 +23,7 @@ var urls = [],
     urlsPromises = [],
     spinner,
     dep = {};
-const debug = true;
+const debug = false;
 
 var readPackage = (packageData) => {
   try {

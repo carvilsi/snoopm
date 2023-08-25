@@ -1,10 +1,10 @@
 {
   "name": "snoopm",
   "version": "1.1.10",
-  "description": "simple cli npm develope dependecies analyzer",
+  "description": "A cli to get at a glance what are the fundations of other Node.js code.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/mocha/bin/mocha.js --config=tests/.mocha_opts.yaml tests/"
   },
   "engines": {
     "node": ">=6.2.2"
@@ -24,5 +24,10 @@
     "commander": "^2.9.0",
     "logplease": "^1.2.15",
     "semver": "^7.5.4"
+  },
+  "devDependencies": {
+    "chai": "^4.3.8",
+    "execa": "^8.0.1",
+    "mocha": "^10.2.0"
   }
 }
