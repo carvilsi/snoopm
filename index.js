@@ -186,7 +186,6 @@ var snoopm = (options) => {
       {
         if (this.options.args[0].indexOf('.') === 0 ||
             this.options.args[0].indexOf('/') === 0 ) {
-              if (debug) console.log('🐞 HEEEEEEERE');
           readPackage(require(this.options.args[0]));
         }
         // url to json raw provided
