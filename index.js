@@ -37,7 +37,6 @@ var readPackage = (packageData) => {
       Object.keys(packageData.devDependencies).forEach((key)=>{
         urlsPromises.push(getUrlOfPackage(key));
       });
-
     } else {
       if (!packageData.dependencies) {
         logger.warn('This package has not dependencies. Try with -d');
@@ -51,7 +50,7 @@ var readPackage = (packageData) => {
 
     Promise.all(urlsPromises)
     .then((res) => {
-      if (typeof this.options.lines == 'undefined') {
+      if (typeof this.options.lines === 'undefined') {
         spinner.stop(true);
         console.log(table.toString());
       } else {
@@ -65,6 +64,7 @@ var readPackage = (packageData) => {
 }
 
 var getUrlOfPackage = (packageName) => {
+  if (debug) console.log(`🐞 package name: ${packageName}`);
   return new Promise((resolve, reject) => {
     exec(npmView.concat(packageName), (error, stdout, stderr) => {
       if (!error && !stderr) {
@@ -124,6 +124,7 @@ var requesting = (url) => {
   });
 }
 
+//TODO: consider to refactor the inline if, for readibility.
 var writeDown = (depData) => {
   switch (this.logOutputFormat) {
     case 'verbose':
@@ -132,61 +133,120 @@ var writeDown = (depData) => {
         currentVersion = currentVersion.substring(1)
       }
       if (this.options.lines) {
-        console.log(colors.gray(depData.name).concat(' ; ').concat(semver.lt(currentVersion,depData['dist-tags'].latest) ? colors.red(`${currentVersion} --> ${depData['dist-tags'].latest}`) : depData['dist-tags'].latest).concat(' ; ').concat(typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':colors.underline(depData.homepage).concat(' ; ').concat(colors.cyan(depData.description))));
+        console.log(colors.gray(depData.name)
+          .concat(' ; ')
+          .concat(semver.lt(currentVersion,depData['dist-tags'].latest) ? 
+            colors.red(`${currentVersion} --> ${depData['dist-tags'].latest}`) : 
+            depData['dist-tags'].latest)
+          .concat(' ; ')
+          .concat(typeof depData.homepage === 'undefined' ? 
+            '¬.¬ --> unknown, not available?' : 
+            colors.underline(depData.homepage)
+          .concat(' ; ').concat(colors.cyan(depData.description))));
       } else {
-        table.push([colors.gray(depData.name),semver.lt(currentVersion,depData['dist-tags'].latest) ? colors.red(`${currentVersion} --> ${depData['dist-tags'].latest}`) : depData['dist-tags'].latest,typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':colors.underline(typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':depData.homepage),colors.cyan(depData.description.length>70?depData.description.substring(0,70).concat('...'):depData.description)]);
+        table.push([
+          colors.gray(depData.name)
+          ,semver.lt(currentVersion,depData['dist-tags'].latest) ? 
+            colors.red(`${currentVersion} --> ${depData['dist-tags'].latest}`) : 
+            depData['dist-tags'].latest,
+          typeof depData.homepage === 'undefined' ? 
+            '¬.¬ --> unknown, not available?' : 
+            colors.underline(typeof depData.homepage === 'undefined' ? 
+            '¬.¬ --> unknown, not available?' : 
+            depData.homepage),
+          colors.cyan(depData.description.length>70 ? 
+            depData.description.substring(0,70).concat('...') : 
+            depData.description)
+        ]);
       }
       break;
     case 'default-noColor':
       if (this.options.lines) {
-        console.log(depData.name.concat(' ; ').concat(typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':depData.homepage).concat(' ; ').concat(depData.description));
+        console.log(depData.name
+          .concat(' ; ')
+          .concat(typeof depData.homepage === 'undefined' ? 
+            '¬.¬ --> unknown, not available?' : 
+            depData.homepage)
+          .concat(' ; ').concat(depData.description));
       } else {
-        table.push([depData.name,typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':depData.homepage,depData.description.length>70?depData.description.substring(0,70).concat('...'):depData.description]);
+        table.push([
+          depData.name,
+          typeof depData.homepage === 'undefined' ? 
+            '¬.¬ --> unknown, not available?' : 
+            depData.homepage,depData.description.length > 70 ? 
+            depData.description.substring(0,70).concat('...') : 
+            depData.description
+        ]);
       }
       break;
     case 'verbose-noColor':
       if (this.options.lines) {
-        console.log(depData.name.concat(' ; ').concat(depData['dist-tags'].latest).concat(' ; ').concat(depData.homepage).concat(' ; ').concat(depData.description));
+        console.log(depData.name
+          .concat(' ; ')
+          .concat(depData['dist-tags'].latest)
+          .concat(' ; ')
+          .concat(depData.homepage)
+          .concat(' ; ')
+          .concat(depData.description));
       } else {
-        table.push([depData.name.toString(),depData['dist-tags'].latest.toString(),typeof depData.homepage == 'undefined'?'¬.¬ --> unknown, not available?':depData.homepage,depData.description.length>70?depData.description.substring(0,70).concat('...'):depData.description]);
+        table.push([
+          depData.name.toString(),
+          depData['dist-tags'].latest.toString(),
+          typeof depData.homepage === 'undefined' ? 
+            '¬.¬ --> unknown, not available?' : 
+            depData.homepage,
+          depData.description.length > 70 ? 
+            depData.description.substring(0,70)
+            .concat('...') : 
+            depData.description
+        ]);
       }
       break;
     default:
       if (this.options.lines) {
-        console.log(colors.gray(depData.name).concat(' ; ').concat(colors.underline(depData.homepage).concat(' ; ').concat(colors.cyan(depData.description))));
+        console.log(colors.gray(depData.name)
+          .concat(' ; ')
+          .concat(colors.underline(depData.homepage)
+          .concat(' ; ')
+          .concat(colors.cyan(depData.description))));
       } else {
-        table.push([colors.gray(depData.name),colors.underline(depData.homepage),colors.cyan(depData.description.length>70?depData.description.substring(0,70).concat('...'):depData.description)]);
+        table.push([
+          colors.gray(depData.name),
+          colors.underline(depData.homepage),
+          colors.cyan(depData.description.length > 70 ? 
+            depData.description.substring(0,70)
+            .concat('...') : 
+            depData.description)
+        ]);
       }
       break;
   }
 }
 
 var snoopm = (options) => {
-  
   try {
-  
     spinner = new Spinner('SnOOping.. %s');
     spinner.setSpinnerString('==^^^^==||__');
     this.options = options;
-
-    if (debug) console.log(`🐞 options ${JSON.stringify(this.options)}`);
 
     // we want a clean output for lines option without the spinner 
     if (typeof this.options.lines === 'undefined') {
       spinner.start();
     }
 
+    if (debug) console.log(`🐞 args[0] ${this.options.args[0]}`);
     // we want to read the local package json file
     if (!this.options.args.length || this.options.args[0] === '.') {
         readPackage(require(process.cwd().concat('/package.json')));
     } else {
-      if (debug) console.log(`🐞 the command:  ${this.options.args[0]}`);
-      if (path.basename(this.options.args[0]).trim() === 'package.json') 
-      // || this.options.args[0].indexOf('node_modules') !== 0) 
-      {
-        if (this.options.args[0].indexOf('.') === 0 ||
-            this.options.args[0].indexOf('/') === 0 ) {
-          readPackage(require(this.options.args[0]));
+      if (path.basename(this.options.args[0]).trim() === 'package.json' 
+          || this.options.args[0].indexOf('node_modules') !== -1) {
+        if (this.options.args[0].indexOf('.') === 0 || this.options.args[0].indexOf('/') === 0) {
+          var pathPackage = this.options.args[0];
+          if (this.options.args[0].indexOf('package.json') === -1) {
+            pathPackage = `${pathPackage}/package.json`; 
+          }
+          readPackage(require(pathPackage));
         }
         // url to json raw provided
         if (this.options.args[0].indexOf('http') === 0) {
