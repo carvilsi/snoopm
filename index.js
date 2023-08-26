@@ -23,12 +23,14 @@ var urls = [],
     urlsPromises = [],
     spinner,
     dep = {};
-const debug = true;
+const debug = false;
 
 var readPackage = (packageData) => {
   try {
     parseCommandLine();
     if (this.options.dev) {
+      console.log(`🐞 package data\n: ${JSON.stringify(packageData, null, 3)}`);
+      
       if (!packageData.devDependencies) {
         logger.warn('This package has not devDependencies');
         process.exit(42);
@@ -50,7 +52,7 @@ var readPackage = (packageData) => {
 
     Promise.all(urlsPromises)
     .then((res) => {
-      if (typeof this.options.lines == 'undefined') {
+      if (typeof this.options.lines === 'undefined') {
         spinner.stop(true);
         console.log(table.toString());
       } else {
@@ -164,7 +166,7 @@ var writeDown = (depData) => {
       if (this.options.lines) {
         console.log(depData.name
           .concat(' ; ')
-          .concat(typeof depData.homepage == 'undefined' ? 
+          .concat(typeof depData.homepage === 'undefined' ? 
             '¬.¬ --> unknown, not available?' : 
             depData.homepage)
           .concat(' ; ').concat(depData.description));
@@ -224,33 +226,34 @@ var writeDown = (depData) => {
 }
 
 var snoopm = (options) => {
-  
   try {
-  
     spinner = new Spinner('SnOOping.. %s');
     spinner.setSpinnerString('==^^^^==||__');
     this.options = options;
-
-    if (debug) console.log(`🐞 options ${JSON.stringify(this.options)}`);
 
     // we want a clean output for lines option without the spinner 
     if (typeof this.options.lines === 'undefined') {
       spinner.start();
     }
 
+    if (debug) console.log(`🐞 again!!!!! args[0] ${this.options.args[0]}`);
     // we want to read the local package json file
     if (!this.options.args.length || this.options.args[0] === '.') {
         readPackage(require(process.cwd().concat('/package.json')));
     } else {
-      if (debug) console.log(`🐞 the command:  ${this.options.args[0]}`);
-      if (path.basename(this.options.args[0]).trim() === 'package.json') 
-      // || this.options.args[0].indexOf('node_modules') !== 0) 
+      if (path.basename(this.options.args[0]).trim() === 'package.json' 
+          || this.options.args[0].indexOf('node_modules') !== -1) 
       {
-        if (this.options.args[0].indexOf('.') === 0 ||
-            this.options.args[0].indexOf('/') === 0 ) {
-              if (debug) console.log('🐞 HEEEEEEERE');
-          readPackage(require(this.options.args[0]));
+        if (this.options.args[0].indexOf('.') === 0 || this.options.args[0].indexOf('/') === 0) {
+          if (debug) console.log('🐞 HEEEEEEERE');
+          
+          var pathPackage = this.options.args[0];
+          if (this.options.args[0].indexOf('package.json') === -1) {
+            pathPackage = `${pathPackage}/package.json`; 
+          }
+          readPackage(require(pathPackage));
         }
+
         // url to json raw provided
         if (this.options.args[0].indexOf('http') === 0) {
           var url = this.options.args[0];

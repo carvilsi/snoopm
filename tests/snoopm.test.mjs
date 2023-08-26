@@ -68,7 +68,7 @@ describe('SnOOpm local', async ()=> {
     assertDependencies(stdout, snoopmDependencies);
     assert.notEqual(stdout.indexOf(pckg.dependencies[snoopmDependencies[0]].substring(1)), -1, 'should find the dependency version');
   });
- 
+
   it('should retieve dev-dependencies table output verbose for snooping on local package.json argument "-dv"', async () => {
     var {stdout} = await execa('./bin/snoopm.js', ['-dv']);
     console.log(stdout);
@@ -102,7 +102,7 @@ describe('SnOOpm remote', async ()=> {
   });
  
   // TODO: this one is failing
-  it.skip('should retieve dev-dependencies table output for snooping at remote package.json "[url] -d"', async () => {
+  it.only('should retieve dev-dependencies table output for snooping at remote package.json "[url] -d"', async () => {
     const {stdout} = await execa('./bin/snoopm.js', [pckg.repository.url, '-d']);
     assertDependencies(stdout, snoopmDevDependencies); 
   });
@@ -114,7 +114,7 @@ describe('SnOOpm remote', async ()=> {
   });
  
   // TODO: this one is failing
-  it.skip('should retieve dev-dependencies table output for snooping at remote package.json "[url] -d"', async () => {
+  it('should retieve dev-dependencies able list output for snooping at remote package.json "[url] -ld"', async () => {
     const {stdout} = await execa('./bin/snoopm.js', [pckg.repository.url, '-ld']);
     assert.equal(stdout.indexOf('┌────'), -1, 'should not contain table');
     assertDependencies(stdout, snoopmDevDependencies); 
@@ -127,7 +127,7 @@ describe('SnOOpm remote', async ()=> {
   });
  
   // TODO: this one is failing
-  it.skip('should retieve dev-dependencies verbose table output for snooping at remote package.json "[url] -dv"', async () => {
+  it('should retieve dev-dependencies verbose table output for snooping at remote package.json "[url] -dv"', async () => {
     const {stdout} = await execa('./bin/snoopm.js', [pckg.repository.url, '-dv']);
     assertDependencies(stdout, snoopmDevDependencies); 
     assert.notEqual(stdout.indexOf(pckg.devDependencies[snoopmDevDependencies[0]].substring(1)), -1, 'should find the dependency version');
@@ -141,7 +141,7 @@ describe('SnOOpm remote', async ()=> {
   });
  
   // TODO: this one is failing
-  it.skip('should retieve dev-dependencies verbose table output for snooping at remote package.json "[url] -dlv"', async () => {
+  it('should retieve dev-dependencies verbose table output for snooping at remote package.json "[url] -dlv"', async () => {
     const {stdout} = await execa('./bin/snoopm.js', [pckg.repository.url, '-dlv']);
     assertDependencies(stdout, snoopmDevDependencies); 
     assert.equal(stdout.indexOf('┌────'), -1, 'should not contain table');
@@ -158,13 +158,28 @@ describe('SnOOpm at node_modules', async ()=> {
   });
  
   // TODO: this one is failing
-  it.skip('should retieve default table output for snooping at node_modules package.json "[node_modules_path]" only with directory', async () => {
+  it('should retieve default table output for snooping at node_modules package.json "[node_modules_path]" only with directory', async () => {
     const {stdout} = await execa('./bin/snoopm.js', [pathPackageNodeModuleDir]);
     assertDependencies(stdout, snoopmDependencies); 
   });
  
+  it('should retieve default table output for snooping at node_modules package.json "[node_modules_path]" with absolute path', async () => {
+    const absolutePathPackageNodeModule = `${process.cwd()}${pathPackageNodeModule.substring(1)}`;
+    console.log(absolutePathPackageNodeModule);
+    const {stdout} = await execa('./bin/snoopm.js', [absolutePathPackageNodeModule]);
+    console.log(stdout);
+    assertDependencies(stdout, snoopmDependencies); 
+  });
+ 
   // TODO: this one is failing
-  it.skip('should retieve dev-dependencies table output for snooping at node_modules package.json "[node_modules_path] -d"', async () => {
+  it('should retieve default table output for snooping at node_modules package.json "[node_modules_path]" only with directory and  with absolute path', async () => {
+    const absolutePathPackageNodeModuleDir = `${process.cwd()}${pathPackageNodeModuleDir.substring(1)}`;
+    const {stdout} = await execa('./bin/snoopm.js', [absolutePathPackageNodeModuleDir]);
+    assertDependencies(stdout, snoopmDependencies); 
+  });
+ 
+  // TODO: this one is failing
+  it('should retieve dev-dependencies table output for snooping at node_modules package.json "[node_modules_path] -d"', async () => {
     const {stdout} = await execa('./bin/snoopm.js', [pathPackageNodeModule, '-d']);
     assertDependencies(stdout, snoopmDevDependencies); 
   });
@@ -176,7 +191,7 @@ describe('SnOOpm at node_modules', async ()=> {
   });
  
   // TODO: this one is failing
-  it.skip('should retieve dev-dependencies table output for snooping at node_modules package.json "[node_modules_path] -d"', async () => {
+  it('should retieve dev-dependencies table output for snooping at node_modules package.json "[node_modules_path] -d"', async () => {
     const {stdout} = await execa('./bin/snoopm.js', [pathPackageNodeModule, '-ld']);
     assert.equal(stdout.indexOf('┌────'), -1, 'should not contain table');
     assertDependencies(stdout, snoopmDevDependencies); 
@@ -189,7 +204,7 @@ describe('SnOOpm at node_modules', async ()=> {
   });
  
   // TODO: this one is failing
-  it.skip('should retieve dev-dependencies verbose table output for snooping at node_modules package.json "[node_modules_path] -dv"', async () => {
+  it('should retieve dev-dependencies verbose table output for snooping at node_modules package.json "[node_modules_path] -dv"', async () => {
     const {stdout} = await execa('./bin/snoopm.js', [pathPackageNodeModule, '-dv']);
     assertDependencies(stdout, snoopmDevDependencies); 
     assert.notEqual(stdout.indexOf(pckg.devDependencies[snoopmDevDependencies[0]].substring(1)), -1, 'should find the dependency version');
@@ -203,7 +218,7 @@ describe('SnOOpm at node_modules', async ()=> {
   });
  
   // TODO: this one is failing
-  it.skip('should retieve dev-dependencies verbose table output for snooping at node_modules package.json "[node_modules_path] -dlv"', async () => {
+  it('should retieve dev-dependencies verbose table output for snooping at node_modules package.json "[node_modules_path] -dlv"', async () => {
     const {stdout} = await execa('./bin/snoopm.js', [pathPackageNodeModule, '-dlv']);
     assertDependencies(stdout, snoopmDevDependencies); 
     assert.equal(stdout.indexOf('┌────'), -1, 'should not contain table');
