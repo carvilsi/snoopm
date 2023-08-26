@@ -171,7 +171,6 @@ describe('SnOOpm at node_modules', async ()=> {
  
   it('should retieve default table output for snooping at node_modules package.json "[node_modules_path]" with absolute path', async () => {
     const absolutePathPackageNodeModule = `${process.cwd()}${pathPackageNodeModule.substring(1)}`;
-    console.log(absolutePathPackageNodeModule);
     const {stdout} = await execa('./bin/snoopm.js', [absolutePathPackageNodeModule]);
     console.log(stdout);
     assertDependencies(stdout, snoopmDependencies); 
