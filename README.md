@@ -6,6 +6,8 @@
     :dog: Snooping around Node.js code dependencies 
 </p>
 
+![tests](https://github.com/carvilsi/snoopm/actions/workflows/tests.yml/badge.svg)
+
 <p align="left">
 A cli to get at a glance what are the fundations of other Node.js code.
 </p>
@@ -41,7 +43,7 @@ Options:
 
 - Snooping the great **nodemon** dependencies by **repo URL** 
 
-`$snoopm https://github.com/remy/nodemon`
+`$ snoopm https://github.com/remy/nodemon`
 
 ### Collaborators
 sNooPM **logo** made by [@psikoz](https://github.com/psikoz)
