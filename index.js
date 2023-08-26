@@ -22,7 +22,8 @@ var urls = [],
     table = new Table(),
     urlsPromises = [],
     spinner,
-    dep = {};
+    dep = {},
+    args;
 const debug = false;
 
 var readPackage = (packageData) => {
@@ -223,34 +224,38 @@ var writeDown = (depData) => {
   }
 }
 
-var snoopm = (options) => {
+var snoopm = (args, options) => {
   try {
     spinner = new Spinner('SnOOping.. %s');
     spinner.setSpinnerString('==^^^^==||__');
     this.options = options;
+    if (typeof args === 'undefined') {
+      this.args = [];
+    } else {
+      this.args = args;
+    }
 
     // we want a clean output for lines option without the spinner 
     if (typeof this.options.lines === 'undefined') {
       spinner.start();
     }
 
-    if (debug) console.log(`🐞 args[0] ${this.options.args[0]}`);
     // we want to read the local package json file
-    if (!this.options.args.length || this.options.args[0] === '.') {
+    if (!this.args.length || this.args[0] === '.') {
         readPackage(require(process.cwd().concat('/package.json')));
     } else {
-      if (path.basename(this.options.args[0]).trim() === 'package.json' 
-          || this.options.args[0].indexOf('node_modules') !== -1) {
-        if (this.options.args[0].indexOf('.') === 0 || this.options.args[0].indexOf('/') === 0) {
-          var pathPackage = this.options.args[0];
-          if (this.options.args[0].indexOf('package.json') === -1) {
+      if (path.basename(this.args[0]).trim() === 'package.json' 
+          || this.args[0].indexOf('node_modules') !== -1) {
+        if (this.args[0].indexOf('.') === 0 || this.args[0].indexOf('/') === 0) {
+          var pathPackage = this.args[0];
+          if (this.args[0].indexOf('package.json') === -1) {
             pathPackage = `${pathPackage}/package.json`; 
           }
           readPackage(require(pathPackage));
         }
         // url to json raw provided
-        if (this.options.args[0].indexOf('http') === 0) {
-          var url = this.options.args[0];
+        if (this.args[0].indexOf('http') === 0) {
+          var url = this.args[0];
           if (url.indexOf('github.com') > 0) {
             url = url.replace('github.com','raw.githubusercontent.com');
             url = url.replace('blob/','');
@@ -259,8 +264,8 @@ var snoopm = (options) => {
         }
       }
       // trying yo read package.json from git hub repository and master branch
-      else if (this.options.args[0].indexOf('http') === 0) {
-        var url = this.options.args[0];
+      else if (this.args[0].indexOf('http') === 0) {
+        var url = this.args[0];
         var urlArr = url.split('\/');
         if (url.indexOf('github.com') > 0 && urlArr.length === 5) {
           url = url.replace('github.com','raw.githubusercontent.com');
