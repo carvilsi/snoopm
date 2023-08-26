@@ -19,9 +19,9 @@
   "dependencies": {
     "axios": "^0.26.1",
     "cli-spinner": "^0.2.10",
-    "cli-table": "^0.3.4",
+    "cli-table": "^0.3.11",
     "colors": "^1.4.0",
-    "commander": "^2.9.0",
+    "commander": "^2.20.3",
     "logplease": "^1.2.15",
     "semver": "^7.5.4"
   },
