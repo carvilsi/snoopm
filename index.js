@@ -29,8 +29,6 @@ var readPackage = (packageData) => {
   try {
     parseCommandLine();
     if (this.options.dev) {
-      console.log(`🐞 package data\n: ${JSON.stringify(packageData, null, 3)}`);
-      
       if (!packageData.devDependencies) {
         logger.warn('This package has not devDependencies');
         process.exit(42);
@@ -236,24 +234,20 @@ var snoopm = (options) => {
       spinner.start();
     }
 
-    if (debug) console.log(`🐞 again!!!!! args[0] ${this.options.args[0]}`);
+    if (debug) console.log(`🐞 args[0] ${this.options.args[0]}`);
     // we want to read the local package json file
     if (!this.options.args.length || this.options.args[0] === '.') {
         readPackage(require(process.cwd().concat('/package.json')));
     } else {
       if (path.basename(this.options.args[0]).trim() === 'package.json' 
-          || this.options.args[0].indexOf('node_modules') !== -1) 
-      {
+          || this.options.args[0].indexOf('node_modules') !== -1) {
         if (this.options.args[0].indexOf('.') === 0 || this.options.args[0].indexOf('/') === 0) {
-          if (debug) console.log('🐞 HEEEEEEERE');
-          
           var pathPackage = this.options.args[0];
           if (this.options.args[0].indexOf('package.json') === -1) {
             pathPackage = `${pathPackage}/package.json`; 
           }
           readPackage(require(pathPackage));
         }
-
         // url to json raw provided
         if (this.options.args[0].indexOf('http') === 0) {
           var url = this.options.args[0];
