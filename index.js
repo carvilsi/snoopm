@@ -235,11 +235,11 @@ var snoopm = (args, options) => {
       this.args = args;
     }
 
+    //TODO: refactor this!
     // we want a clean output for lines option without the spinner 
     if (typeof this.options.lines === 'undefined') {
       spinner.start();
     }
-
     // we want to read the local package json file
     if (!this.args.length || this.args[0] === '.') {
         readPackage(require(process.cwd().concat('/package.json')));

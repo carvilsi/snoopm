@@ -1,6 +1,6 @@
 {
   "name": "snoopm",
-  "version": "1.1.14",
+  "version": "1.1.15",
   "description": "A cli to get at a glance what are the fundations of other Node.js code.",
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,13 @@
     "type": "git",
     "url": "https://github.com/carvilsi/snoopm"
   },
+  "keywords": [
+    "node_modules",
+    "version",
+    "npm",
+    "dependencies",
+    "cli"
+  ],
   "bin": "./bin/snoopm.js",
   "author": "carvilsi",
   "license": "MIT",

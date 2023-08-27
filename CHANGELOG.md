@@ -1,5 +1,9 @@
 # Changelog
 
+# [v1.1.15](https://github.com/carvilsi/snoopm/releases/tag/v1.1.15) (2023-08-27)
+
+* Adding keywords to package.json 
+
 # [v1.1.14](https://github.com/carvilsi/snoopm/releases/tag/v1.1.14) (2023-08-27)
 
 * Added tests and CI
