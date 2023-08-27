@@ -1,10 +1,10 @@
 {
   "name": "snoopm",
-  "version": "1.1.11",
+  "version": "1.1.14",
   "description": "A cli to get at a glance what are the fundations of other Node.js code.",
   "main": "index.js",
   "scripts": {
-    "test": "npm install snoopm; ./node_modules/mocha/bin/mocha.js --config=tests/.mocha_opts.yaml tests/"
+    "test": "npm install snoopm; ./node_modules/mocha/bin/mocha.js --config=tests/.mocha_opts.yaml tests/; npm uninstall snoopm"
   },
   "engines": {
     "node": ">=18.x"
@@ -17,14 +17,13 @@
   "author": "carvilsi",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.26.1",
+    "axios": "^1.5.0",
     "cli-spinner": "^0.2.10",
-    "cli-table": "^0.3.4",
+    "cli-table": "^0.3.11",
     "colors": "^1.4.0",
-    "commander": "^2.9.0",
+    "commander": "^11.0.0",
     "logplease": "^1.2.15",
-    "semver": "^7.5.4",
-    "snoopm": "^1.1.10"
+    "semver": "^7.5.4"
   },
   "devDependencies": {
     "chai": "^4.3.8",
