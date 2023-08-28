@@ -26,7 +26,7 @@ var logOutputFormat = 'default',
     dataPromises = [],
     spinner,
     dep = {},
-    args;
+    opts;
 
 function pushDependencies(dependencyObj) {
   var depKeys = Object.keys(dependencyObj);
@@ -35,10 +35,10 @@ function pushDependencies(dependencyObj) {
   }
 }
 
-var readPackage = async (packageData) => {
+async function readPackage(packageData) {
   try {
     parseCommandLine();
-    if (this.options.dev) {
+    if (opts.dev) {
       if (!packageData.devDependencies) {
         logger.warn('This package has not devDependencies');
         process.exit(42);
@@ -55,7 +55,7 @@ var readPackage = async (packageData) => {
     }
 
     await Promise.all(dataPromises)
-    if (typeof this.options.lines === 'undefined') {
+    if (typeof opts.lines === 'undefined') {
       spinner.stop(true);
       console.log(table.toString());
     } else {
@@ -67,7 +67,7 @@ var readPackage = async (packageData) => {
   }
 }
 
-var getPackageData = (packageName) => {
+function getPackageData(packageName) {
   return new Promise((resolve, reject) => {
     exec(npmView.concat(packageName), (error, stdout, stderr) => {
       if (!error && !stderr) {
@@ -81,23 +81,23 @@ var getPackageData = (packageName) => {
   });
 }
 
-var parseCommandLine = () => {
-  if (this.options.verbose && this.options.color) {
-    this.logOutputFormat = 'verbose-noColor';
+function parseCommandLine() {
+  if (opts.verbose && opts.color) {
+    logOutputFormat = 'verbose-noColor';
     table = new Table({
       head:['name','Ver.','URL','Description']
     });
-  } else if (this.options.verbose && !this.options.color) {
-    this.logOutputFormat = 'verbose';
+  } else if (opts.verbose && !opts.color) {
+    logOutputFormat = 'verbose';
     table = new Table();
-  } else if (!this.options.verbose && this.options.color) {
-    this.logOutputFormat = 'default-noColor';
+  } else if (!opts.verbose && opts.color) {
+    logOutputFormat = 'default-noColor';
     table = new Table({
       head:['name','URL','Description']
     });
-  } else if (this.options.verbose && this.options.dev) {
+  } else if (opts.verbose && opts.dev) {
     table = new Table();
-  } else if (this.options.verbose && this.options.dev && this.options.color) {
+  } else if (opts.verbose && opts.dev && opts.color) {
     table = new Table({
       head:['name','Ver.','URL','Description']
     });
@@ -106,7 +106,7 @@ var parseCommandLine = () => {
   }
 }
 
-var request = async (url) => {
+async function request(url) {
   try {
     const response = await axios.get(url)
     await readPackage(response.data);
@@ -116,14 +116,14 @@ var request = async (url) => {
 }
 
 //TODO: consider to refactor the inline if, for readibility.
-var writeDown = (depData) => {
-  switch (this.logOutputFormat) {
+function writeDown(depData) {
+  switch (logOutputFormat) {
     case 'verbose':
       var currentVersion = dep[depData.name];
       if (/^[\^\~].*/m.test(currentVersion)) {
         currentVersion = currentVersion.substring(1)
       }
-      if (this.options.lines) {
+      if (opts.lines) {
         console.log(colors.gray(depData.name)
           .concat(' ; ')
           .concat(semver.lt(currentVersion,depData['dist-tags'].latest) ? 
@@ -152,7 +152,7 @@ var writeDown = (depData) => {
       }
       break;
     case 'default-noColor':
-      if (this.options.lines) {
+      if (opts.lines) {
         console.log(depData.name
           .concat(' ; ')
           .concat(typeof depData.homepage === 'undefined' ? 
@@ -171,7 +171,7 @@ var writeDown = (depData) => {
       }
       break;
     case 'verbose-noColor':
-      if (this.options.lines) {
+      if (opts.lines) {
         console.log(depData.name
           .concat(' ; ')
           .concat(depData['dist-tags'].latest)
@@ -194,7 +194,7 @@ var writeDown = (depData) => {
       }
       break;
     default:
-      if (this.options.lines) {
+      if (opts.lines) {
         console.log(colors.gray(depData.name)
           .concat(' ; ')
           .concat(colors.underline(depData.homepage)
@@ -263,10 +263,11 @@ var snoopm = async (args, options) => {
   try {
     spinner = new Spinner('SnOOping.. %s');
     spinner.setSpinnerString('==^^^^==||__');
-    this.options = options;
+    
+    opts = options;
     
     // we want a clean output for lines option without the spinner 
-    if (typeof this.options.lines === 'undefined') {
+    if (typeof opts.lines === 'undefined') {
       spinner.start();
     }
     
