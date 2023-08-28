@@ -6,6 +6,7 @@ const pckg = require("./../package.json");
 
 const snoopmBin = './bin/snoopm.js';
 
+// TODO: Add is-url dependency to tests after publishing new version
 const snoopmDependencies = ['axios','cli-spinner','cli-table','colors','commander','logplease','semver'];
 const snoopmDevDependencies = ['chai','mocha','execa'];
 

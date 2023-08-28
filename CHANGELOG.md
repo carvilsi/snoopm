@@ -1,5 +1,10 @@
 # Changelog
 
+# [v1.1.16](https://github.com/carvilsi/snoopm/releases/tag/v1.1.16) (2023-08-28)
+
+* Refactor the code.
+* Adding tests for failing cases.
+
 # [v1.1.15](https://github.com/carvilsi/snoopm/releases/tag/v1.1.15) (2023-08-27)
 
 * Adding keywords to package.json 
