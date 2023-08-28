@@ -36,7 +36,7 @@ function pushDependencies(dependencyObj) {
   }
 }
 
-var readPackage = (packageData) => {
+var readPackage = async (packageData) => {
   try {
     parseCommandLine();
     if (this.options.dev) {
@@ -55,14 +55,13 @@ var readPackage = (packageData) => {
       pushDependencies(dep);
     }
 
-    Promise.all(dataPromises).then((res) => {
-      if (typeof this.options.lines === 'undefined') {
-        spinner.stop(true);
-        console.log(table.toString());
-      } else {
-        spinner.stop(true);
-      }
-    });
+    await Promise.all(dataPromises)
+    if (typeof this.options.lines === 'undefined') {
+      spinner.stop(true);
+      console.log(table.toString());
+    } else {
+      spinner.stop(true);
+    }
   } catch (e) {
     logger.error(e.stack);
     process.exit(42);
@@ -112,7 +111,7 @@ var parseCommandLine = () => {
 var request = async (url) => {
   try {
     const response = await axios.get(url)
-    readPackage(response.data);
+    await readPackage(response.data);
   } catch (error) {
     throw new Error(`Invalid url provided: ${url}`);
   }
@@ -277,7 +276,7 @@ var snoopm = async (args, options) => {
     if (isUrl(arg)) {
       await request(parseUrl(arg));
     } else {
-      readPackage(require(parseArgs(arg)));
+      await readPackage(require(parseArgs(arg)));
     }
 
     return snoopm;
