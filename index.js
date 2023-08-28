@@ -29,6 +29,13 @@ var urls = [],
     dep = {},
     args;
 
+function pushDependencies(dependencyObj) {
+  var depKeys = Object.keys(dependencyObj);
+  for (var i = 0; i < depKeys.length; i++) {
+    dataPromises.push(getPackageData(depKeys[i]));
+  }
+}
+
 var readPackage = (packageData) => {
   try {
     parseCommandLine();
@@ -38,18 +45,14 @@ var readPackage = (packageData) => {
         process.exit(42);
       }
       dep = packageData.devDependencies;
-      Object.keys(packageData.devDependencies).forEach((key) => {
-        dataPromises.push(getPackageData(key));
-      });
+      pushDependencies(dep);
     } else {
       if (!packageData.dependencies) {
         logger.warn('This package has not dependencies. Try with -d');
         process.exit(42);
       }
       dep = packageData.dependencies;
-      Object.keys(packageData.dependencies).forEach((key) => {
-        dataPromises.push(getPackageData(key));
-      });
+      pushDependencies(dep);
     }
 
     Promise.all(dataPromises).then((res) => {
