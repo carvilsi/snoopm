@@ -20,8 +20,7 @@ const isUrl   = require('is-url');
 const packageName = 'package.json';
 const nodeModulesName = 'node_modules';
 const npmView = 'npm view --json=true '; 
-var urls = [],
-    logOutputFormat = 'default',
+var logOutputFormat = 'default',
     options = {},
     table = new Table(),
     dataPromises = [],
@@ -74,8 +73,7 @@ var getPackageData = (packageName) => {
       if (!error && !stderr) {
         writeDown(JSON.parse(stdout));
         resolve(JSON.parse(stdout));
-      } else
-      if (error) {
+      } else if (error) {
         logger.error('Error reading package: ' + packageName);
         reject(error);
       }
