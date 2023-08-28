@@ -30,7 +30,7 @@ describe('SnOOpm local', async ()=> {
   
   it('should retieve default table output for snooping on local package.json no arguments', async () => {
     const {stdout} = await execa(snoopmBin);
-    // only print the output once.
+    // print the output once.
     console.log(stdout);
     // try to assert things like urls and descriptions is not safe, because could change.
     assertDependencies(stdout, snoopmDependencies); 
@@ -105,18 +105,17 @@ describe('SnOOpm remote', async ()=> {
     assertDependencies(stdout, snoopmDependencies); 
   });
   
-  it.only('should fail if non sense url is provided, e.g "http://lolandthefoobar.baz"', async () => {
+  it('should fail if non sense url is provided, e.g "http://lolandthefoobar.baz"', async () => {
     const u = 'http://lolandthefoobar.baz';
     try {
       const {stdout} = await execa(snoopmBin, [u]);
       done(new Error('This test should fail'));
     } catch (error) {
-      console.log(error)
       assert.equal(error.exitCode, 42, 'should fail');
-      //assert.notEqual(error.stdout.indexOf(`Error: Invalid provided path for: ${u}`), -1, 'should print an error');
+      assert.notEqual(error.stdout.indexOf(`Error: Invalid url provided: ${u}`), -1, 'should print an error');
     }
   });
-
+  
   it('should retieve default table output for snooping at remote package.json complete GitHub url "[url]"', async () => {
     const {stdout} = await execa(snoopmBin, [urlGitHubPackageNode]);
     assertDependencies(stdout, snoopmDependencies); 
@@ -179,7 +178,7 @@ describe('SnOOpm at node_modules', async ()=> {
     assertDependencies(stdout, snoopmDependencies); 
   });
  
-  it.only('should fail if non sense path is provided, e.g "./node_modules"', async () => {
+  it('should fail if non sense path is provided, e.g "./node_modules"', async () => {
     const p = './node_modules';
     try {
       const {stdout} = await execa(snoopmBin, [p]);
@@ -190,7 +189,7 @@ describe('SnOOpm at node_modules', async ()=> {
     }
   });
   
-  it.only('should fail if non sense path is provided, e.g "lol"', async () => {
+  it('should fail if non sense path is provided, e.g "lol"', async () => {
     const p = 'lol';
     try {
       const {stdout} = await execa(snoopmBin, [p]);
@@ -201,7 +200,7 @@ describe('SnOOpm at node_modules', async ()=> {
     }
   });
  
-  it('should retieve default table output for snooping at node_modules package.json "[node_modules_path]" only with directory', async () => {
+  it('should retieve default table output for snooping at node_modules package.json "[node_modules_path]" with directory', async () => {
     const {stdout} = await execa(snoopmBin, [pathPackageNodeModuleDir]);
     assertDependencies(stdout, snoopmDependencies); 
   });
@@ -219,13 +218,13 @@ describe('SnOOpm at node_modules', async ()=> {
     assertDependencies(stdout, snoopmDependencies); 
   });
 
-  it('should retieve default table output for snooping at node_modules package.json "[node_modules_path]" only with directory and with absolute path', async () => {
+  it('should retieve default table output for snooping at node_modules package.json "[node_modules_path]" with directory and with absolute path', async () => {
     const absolutePathPackageNodeModuleDir = `${process.cwd()}${pathPackageNodeModuleDir.substring(1)}`;
     const {stdout} = await execa(snoopmBin, [absolutePathPackageNodeModuleDir]);
     assertDependencies(stdout, snoopmDependencies); 
   });
  
-  it('should retieve default table output for snooping at node_modules package.json "[node_modules_path]" only with directory and without ./', async () => {
+  it('should retieve default table output for snooping at node_modules package.json "[node_modules_path]" with directory and without ./', async () => {
     const noDotPathPackageNodeModuleDir = pathPackageNodeModuleDir.substring(2);
     const {stdout} = await execa(snoopmBin, [noDotPathPackageNodeModuleDir]);
     assertDependencies(stdout, snoopmDependencies); 

@@ -24,7 +24,7 @@ var urls = [],
     logOutputFormat = 'default',
     options = {},
     table = new Table(),
-    urlsPromises = [],
+    dataPromises = [],
     spinner,
     dep = {},
     args;
@@ -38,8 +38,8 @@ var readPackage = (packageData) => {
         process.exit(42);
       }
       dep = packageData.devDependencies;
-      Object.keys(packageData.devDependencies).forEach((key)=>{
-        urlsPromises.push(getUrlOfPackage(key));
+      Object.keys(packageData.devDependencies).forEach((key) => {
+        dataPromises.push(getPackageData(key));
       });
     } else {
       if (!packageData.dependencies) {
@@ -47,13 +47,12 @@ var readPackage = (packageData) => {
         process.exit(42);
       }
       dep = packageData.dependencies;
-      Object.keys(packageData.dependencies).forEach((key)=>{
-        urlsPromises.push(getUrlOfPackage(key));
+      Object.keys(packageData.dependencies).forEach((key) => {
+        dataPromises.push(getPackageData(key));
       });
     }
 
-    Promise.all(urlsPromises)
-    .then((res) => {
+    Promise.all(dataPromises).then((res) => {
       if (typeof this.options.lines === 'undefined') {
         spinner.stop(true);
         console.log(table.toString());
@@ -67,7 +66,7 @@ var readPackage = (packageData) => {
   }
 }
 
-var getUrlOfPackage = (packageName) => {
+var getPackageData = (packageName) => {
   return new Promise((resolve, reject) => {
     exec(npmView.concat(packageName), (error, stdout, stderr) => {
       if (!error && !stderr) {
@@ -107,16 +106,13 @@ var parseCommandLine = () => {
   }
 }
 
-var request = (url) => {
-  axios.get(url).then((response) => {
-    try {
-      readPackage(response.data);
-    } catch (error) {
-      throw new Error(`Invalid url provided: ${url}`);
-    }
-  }).catch((error)=>{
-    return Error(`Error requesting ${url}`);
-  });
+var request = async (url) => {
+  try {
+    const response = await axios.get(url)
+    readPackage(response.data);
+  } catch (error) {
+    throw new Error(`Invalid url provided: ${url}`);
+  }
 }
 
 //TODO: consider to refactor the inline if, for readibility.
@@ -263,7 +259,7 @@ function parseUrl(prl) {
   return snoopmURL.toString();
 }
 
-var snoopm = (args, options) => {
+var snoopm = async (args, options) => {
   try {
     spinner = new Spinner('SnOOping.. %s');
     spinner.setSpinnerString('==^^^^==||__');
@@ -276,14 +272,13 @@ var snoopm = (args, options) => {
     
     const arg = !args.length ? '' : args[0];
     if (isUrl(arg)) {
-      request(parseUrl(arg));
+      await request(parseUrl(arg));
     } else {
       readPackage(require(parseArgs(arg)));
     }
 
     return snoopm;
   } catch (e) {
-    console.log('WTFfffffffffffffffffffffffffff');
     logger.error(e);
     process.exit(42);
   }
