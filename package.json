@@ -1,6 +1,6 @@
 {
   "name": "snoopm",
-  "version": "1.1.15",
+  "version": "1.1.16",
   "description": "A cli to get at a glance what are the fundations of other Node.js code.",
   "main": "index.js",
   "scripts": {
@@ -29,6 +29,7 @@
     "cli-table": "^0.3.11",
     "colors": "^1.4.0",
     "commander": "^11.0.0",
+    "is-url": "^1.2.4",
     "logplease": "^1.2.15",
     "semver": "^7.5.4"
   },
