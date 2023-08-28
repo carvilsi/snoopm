@@ -14,7 +14,11 @@ const Table   = require('cli-table');
 const Spinner = require('cli-spinner').Spinner;
 const semver  = require('semver');
 const logger  = require('logplease').create('SnOOpm');
+const url     = require('url');
+const isUrl   = require('is-url');
 
+const packageName = 'package.json';
+const nodeModulesName = 'node_modules';
 const npmView = 'npm view --json=true '; 
 var urls = [],
     logOutputFormat = 'default',
@@ -24,7 +28,6 @@ var urls = [],
     spinner,
     dep = {},
     args;
-const debug = false;
 
 var readPackage = (packageData) => {
   try {
@@ -65,7 +68,6 @@ var readPackage = (packageData) => {
 }
 
 var getUrlOfPackage = (packageName) => {
-  if (debug) console.log(`🐞 package name: ${packageName}`);
   return new Promise((resolve, reject) => {
     exec(npmView.concat(packageName), (error, stdout, stderr) => {
       if (!error && !stderr) {
@@ -81,47 +83,39 @@ var getUrlOfPackage = (packageName) => {
 }
 
 var parseCommandLine = () => {
-
   if (this.options.verbose && this.options.color) {
     this.logOutputFormat = 'verbose-noColor';
     table = new Table({
       head:['name','Ver.','URL','Description']
     });
-  } else
-  if (this.options.verbose && !this.options.color) {
+  } else if (this.options.verbose && !this.options.color) {
     this.logOutputFormat = 'verbose';
     table = new Table();
-  } else
-  if (!this.options.verbose && this.options.color) {
+  } else if (!this.options.verbose && this.options.color) {
     this.logOutputFormat = 'default-noColor';
     table = new Table({
       head:['name','URL','Description']
     });
-  } else
-  if (this.options.verbose && this.options.dev) {
+  } else if (this.options.verbose && this.options.dev) {
     table = new Table();
-  } else
-  if (this.options.verbose && this.options.dev && this.options.color) {
+  } else if (this.options.verbose && this.options.dev && this.options.color) {
     table = new Table({
       head:['name','Ver.','URL','Description']
     });
-  }
-  else {
+  } else {
     table = new Table();
   }
-
 }
 
-var requesting = (url) => {
-  axios.get(url).then((response)=>{
+var request = (url) => {
+  axios.get(url).then((response) => {
     try {
       readPackage(response.data);
     } catch (error) {
-      logger.error('Invalid package.json provided by url');
-      process.exit(42);
+      throw new Error(`Invalid url provided: ${url}`);
     }
   }).catch((error)=>{
-    logger.error('Error requesting package.json');
+    return Error(`Error requesting ${url}`);
   });
 }
 
@@ -224,65 +218,76 @@ var writeDown = (depData) => {
   }
 }
 
+function parseArgs(arg) {
+  const par = path.parse(arg);
+  var snooopmPath;
+  
+  if (par.base === '.' && par.name === '.' || 
+      par.base === '' && par.name === '') { 
+    snooopmPath = `${process.cwd()}/${packageName}`;
+  }
+  if (par.dir.indexOf(nodeModulesName) !== -1) { 
+    if (par.root === '/') {
+      if (par.base === packageName) {
+        snooopmPath = `${par.dir}/${par.base}`;
+      } else {
+        snooopmPath = `${par.dir}/${par.base}/${packageName}`;
+      }
+    }
+    if (par.root === '') {
+      if (par.base === packageName) {
+        snooopmPath = `${process.cwd()}/${par.dir}/${par.base}`;
+      } else {
+        snooopmPath = `${process.cwd()}/${par.dir}/${par.base}/${packageName}`;
+      }
+    }
+  }
+  if (typeof snooopmPath !== 'undefined') {
+    return snooopmPath;
+  } else {
+    throw new Error(`Invalid provided path for: ${arg}`); 
+  }
+}
+
+function parseUrl(prl) {
+  const snoopmURL = new URL(prl);
+  if (snoopmURL.host === 'github.com' ) {
+    snoopmURL.host = 'raw.githubusercontent.com';
+    if (snoopmURL.pathname.indexOf('package.json') === -1) {
+      snoopmURL.pathname = `${snoopmURL.pathname}/master/package.json`;
+    }
+    if (snoopmURL.pathname.indexOf('package.json') !== -1) {
+      snoopmURL.pathname = snoopmURL.pathname.replace('/blob','');
+    }
+  }
+  return snoopmURL.toString();
+}
+
 var snoopm = (args, options) => {
   try {
     spinner = new Spinner('SnOOping.. %s');
     spinner.setSpinnerString('==^^^^==||__');
     this.options = options;
-    if (typeof args === 'undefined') {
-      this.args = [];
-    } else {
-      this.args = args;
-    }
-
-    //TODO: refactor this!
+    
     // we want a clean output for lines option without the spinner 
     if (typeof this.options.lines === 'undefined') {
       spinner.start();
     }
-    // we want to read the local package json file
-    if (!this.args.length || this.args[0] === '.') {
-        readPackage(require(process.cwd().concat('/package.json')));
+    
+    const arg = !args.length ? '' : args[0];
+    if (isUrl(arg)) {
+      request(parseUrl(arg));
     } else {
-      if (path.basename(this.args[0]).trim() === 'package.json' 
-          || this.args[0].indexOf('node_modules') !== -1) {
-        if (this.args[0].indexOf('.') === 0 || this.args[0].indexOf('/') === 0) {
-          var pathPackage = this.args[0];
-          if (this.args[0].indexOf('package.json') === -1) {
-            pathPackage = `${pathPackage}/package.json`; 
-          }
-          readPackage(require(pathPackage));
-        }
-        // url to json raw provided
-        if (this.args[0].indexOf('http') === 0) {
-          var url = this.args[0];
-          if (url.indexOf('github.com') > 0) {
-            url = url.replace('github.com','raw.githubusercontent.com');
-            url = url.replace('blob/','');
-          }
-          requesting(url);
-        }
-      }
-      // trying yo read package.json from git hub repository and master branch
-      else if (this.args[0].indexOf('http') === 0) {
-        var url = this.args[0];
-        var urlArr = url.split('\/');
-        if (url.indexOf('github.com') > 0 && urlArr.length === 5) {
-          url = url.replace('github.com','raw.githubusercontent.com');
-          requesting(url.concat('/').concat('master').concat('/').concat('package.json'));
-        }
-      } else {
-        throw new Error('no valid path or no valid url provided');
-      }
+      readPackage(require(parseArgs(arg)));
     }
 
     return snoopm;
-
   } catch (e) {
-    logger.error('Error 42');
+    console.log('WTFfffffffffffffffffffffffffff');
     logger.error(e);
     process.exit(42);
   }
 }
 
 module.exports = snoopm;
+

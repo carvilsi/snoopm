@@ -29,6 +29,7 @@
     "cli-table": "^0.3.11",
     "colors": "^1.4.0",
     "commander": "^11.0.0",
+    "is-url": "^1.2.4",
     "logplease": "^1.2.15",
     "semver": "^7.5.4"
   },
