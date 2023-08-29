@@ -280,7 +280,7 @@ var snoopm = async (args, options) => {
 
     return snoopm;
   } catch (e) {
-    logger.error(e);
+    logger.error(e.message);
     process.exit(42);
   }
 }

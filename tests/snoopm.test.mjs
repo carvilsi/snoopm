@@ -113,7 +113,7 @@ describe('SnOOpm remote', async ()=> {
       done(new Error('This test should fail'));
     } catch (error) {
       assert.equal(error.exitCode, 42, 'should fail');
-      assert.notEqual(error.stdout.indexOf(`Error: Invalid url provided: ${u}`), -1, 'should print an error');
+      assert.notEqual(error.stdout.indexOf(`Invalid url provided: ${u}`), -1, 'should print an error');
     }
   });
   
@@ -186,7 +186,7 @@ describe('SnOOpm at node_modules', async ()=> {
       done(new Error('This test should fail'));
     } catch (error) {
       assert.equal(error.exitCode, 42, 'should fail');
-      assert.notEqual(error.stdout.indexOf(`Error: Invalid provided path for: ${p}`), -1, 'should print an error');
+      assert.notEqual(error.stdout.indexOf(`Invalid provided path for: ${p}`), -1, 'should print an error');
     }
   });
   
@@ -197,7 +197,7 @@ describe('SnOOpm at node_modules', async ()=> {
       done(new Error('This test should fail'));
     } catch (error) {
       assert.equal(error.exitCode, 42, 'should fail');
-      assert.notEqual(error.stdout.indexOf(`Error: Invalid provided path for: ${p}`), -1, 'should print an error');
+      assert.notEqual(error.stdout.indexOf(`Invalid provided path for: ${p}`), -1, 'should print an error');
     }
   });
  

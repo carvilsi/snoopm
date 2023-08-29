@@ -12,16 +12,13 @@
 </p>
 
 <p align="left">
-    A cli to get at a glance what are the fundations of other Node.js code.
+    A cli to get the basics of other Node.js code at a glance and get ideas on what to use in your next project.
 </p>
 
-<p align="left">
-Gives in a list the url and description for the dependencies.
-</p>
-
-<p align="left">
-    Also it's possible to use it for your own code, e.g. to quick remember which dependency used in a project.
-</p>
+<div align="left">
+    <p>Lists the URL and description of the dependencies.</p>
+    <p>It's also useful to use it for your own code, e.g. to quickly remember which dependency was used in a project.</p>
+</div>
 
 ### Install
 
@@ -53,7 +50,9 @@ Options:
 - Snooping remote dependencies by URL:
 
 `$ snoopm https://github.com/remy/nodemon` or 
+
 `$ snoop https://github.com/remy/nodemon/blob/main/package.json` or
+
 `$ snoop https://raw.githubusercontent.com/remy/nodemon/main/package.json`
 
 ![Alt vmware](https://github.com/carvilsi/snoopm/raw/master/images/remote.png)
@@ -85,3 +84,4 @@ Options:
 ### Collaborators
 
 SnOOpm **logo** made by [@psikoz](https://github.com/psikoz)
+
