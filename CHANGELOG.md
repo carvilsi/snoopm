@@ -1,5 +1,9 @@
 # Changelog
 
+# [v1.1.17](https://github.com/carvilsi/snoopm/releases/tag/v1.1.17) (2023-08-29)
+
+* Improving error output
+
 # [v1.1.16](https://github.com/carvilsi/snoopm/releases/tag/v1.1.16) (2023-08-28)
 
 * Refactor the code.
