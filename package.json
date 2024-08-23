@@ -1,6 +1,6 @@
 {
   "name": "snoopm",
-  "version": "1.1.19",
+  "version": "1.1.20",
   "description": "A cli to get the basics of other Node.js code at a glance",
   "main": "index.js",
   "scripts": {
