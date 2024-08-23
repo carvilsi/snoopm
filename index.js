@@ -1,6 +1,5 @@
 /**
  * SnOOpm 
- * snooping around code based on npm
  */
 
 'use strict';
@@ -72,7 +71,7 @@ function getPackageData(packageName) {
     exec(npmView.concat(packageName), (error, stdout, stderr) => {
       if (!error && !stderr) {
         writeDown(JSON.parse(stdout));
-        resolve(JSON.parse(stdout));
+        resolve();
       } else if (error) {
         logger.error('Error reading package: ' + packageName);
         reject(error);
