@@ -1,5 +1,9 @@
 # Changelog
 
+# [v1.1.22](https://github.com/carvilsi/snoopm/releases/tag/v1.1.22) (2026-04-13)
+
+* Upgrading axios package due to some vulnerabilities
+
 # [v1.1.21](https://github.com/carvilsi/snoopm/releases/tag/v1.1.21) (2025-09-15)
 
 * Upgrading axios package due to CVE-2025-58754 vulnerability
